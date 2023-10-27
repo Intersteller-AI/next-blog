@@ -112,7 +112,7 @@ const CommentsContainer = ({
             deleteComment={deleteCommentHandler}
             replies={comment.replies}
           />
-        ))}
+        )).reverse()}
       </div>
     </div>
   );

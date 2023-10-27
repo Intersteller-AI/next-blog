@@ -13,7 +13,7 @@ import CommentsContainer from "@/components/comments/CommentsContainer";
 import { postActions } from "@/store/reducers/post";
 import Link from "next/link";
 import Image from "next/image";
-import { deletePost, getSinglePost } from "@/services/index/posts";
+import { deletePost, getSinglePost, likePost } from "@/services/index/posts";
 
 const ArticleDetailPage = ({ params }) => {
   const { slug } = params;
@@ -144,13 +144,13 @@ const ArticleDetailPage = ({ params }) => {
           </article>
         </section>
       )}
-      {/* <div className="lg:block hidden mt-20 w-full h-[70vmin] pt-16 md:w-1/3 z-10">
+      <div className="lg:block hidden mt-20 w-full h-[70vmin] pt-16 md:w-1/3 z-10">
         <div className="w-full h-full flex flex-col items-center gap-3 border-b">
           <div className="relative w-36 h-36 rounded-full border-2 border-blue-500 lutline-primary overflow-hidden">
             <Image
               width={100}
               height={100}
-              src={data?.user?.avatar}
+              src={data?.user?.avatar ? data?.user?.avatar : "/assets/images/user.png"}
               alt="o"
               className="w-full h-full object-cover"
             />
@@ -213,7 +213,7 @@ const ArticleDetailPage = ({ params }) => {
             )}
           </div>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };

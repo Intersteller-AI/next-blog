@@ -26,7 +26,9 @@ export const getSinglePost = async ({ slug }) => {
 export const uploadPostImage = async ({ formData }) => {
   try {
     // const config = { headers: { `Content-Type`: `multipart/form-data` } };
-    const { data } = await axios.post(`${server}/api/posts/upload`, formData);
+    const { data } = await axios.post(`${server}/api/posts/upload`, formData, {
+      withCredentials: true,
+    });
 
     return data;
   } catch (error) {
@@ -39,7 +41,10 @@ export const uploadPostImage = async ({ formData }) => {
 
 export const deletePostImage = async ({ filename }) => {
   try {
-    const { data } = await axios.delete(`${server}/api/posts/upload/${filename}`);
+    const { data } = await axios.delete(
+      `${server}/api/posts/upload/${filename}`,
+      { withCredentials: true }
+    );
 
     return data;
   } catch (error) {
@@ -56,6 +61,7 @@ export const createPost = async ({ formData }) => {
       headers: {
         "Content-Type": "application/json",
       },
+      withCredentials: true,
     });
 
     return data;
@@ -73,6 +79,7 @@ export const updatePost = async ({ formData, slug }) => {
       headers: {
         "Content-Type": "application/json",
       },
+      withCredentials: true,
     });
     return data;
   } catch (error) {
@@ -85,7 +92,9 @@ export const updatePost = async ({ formData, slug }) => {
 
 export const deletePost = async ({ slug }) => {
   try {
-    const { data } = await axios.delete(`${server}/api/posts/${slug}`);
+    const { data } = await axios.delete(`${server}/api/posts/${slug}`, {
+      withCredentials: true,
+    });
 
     return data;
   } catch (error) {
@@ -99,7 +108,13 @@ export const deletePost = async ({ slug }) => {
 
 export const likePost = async ({ slug }) => {
   try {
-    const { data } = await axios.post(`${server}/api/posts/likePost/${slug}`);
+    const { data } = await axios.post(
+      `${server}/api/posts/likePost/${slug}`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
 
     return data;
   } catch (error) {

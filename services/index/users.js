@@ -1,5 +1,4 @@
 import axios from "axios";
-import Cookies from "js-cookie";
 import { server } from "../server";
 
 export const signup = async ({ name, email, password }) => {
@@ -13,6 +12,8 @@ export const signup = async ({ name, email, password }) => {
       },
       { withCredentials: true }
     );
+
+    // Cookies.set("token", data.token, { expires: 7, secure: false });
     return data;
   } catch (error) {
     if (error.response && error.response.data.message)
@@ -31,6 +32,7 @@ export const login = async ({ email, password }) => {
       },
       { withCredentials: true }
     );
+    // Cookies.set("token", data.token, { expires: 7, secure: false });
     return data;
   } catch (error) {
     if (error.response && error.response.data.message) {
@@ -42,9 +44,11 @@ export const login = async ({ email, password }) => {
 
 export const logoutSession = async () => {
   try {
-    const { data } = await axios.get(`${server}/api/users/logout`);
+    const { data } = await axios.get(`${server}/api/users/logout`, {
+      withCredentials: true,
+    });
 
-    Cookies.remove("token");
+    // Cookies.remove("token");
     return data;
   } catch (error) {
     if (error.response && error.response.data.message) {
@@ -57,7 +61,7 @@ export const logoutSession = async () => {
 export const getUserProfile = async () => {
   try {
     const { data } = await axios.get(`${server}/api/users/profile`, {
-      withCredentials: true
+      withCredentials: true,
     });
 
     return data;
@@ -69,29 +73,13 @@ export const getUserProfile = async () => {
   }
 };
 
-export const updateProfile = async ({ userData }) => {
-  try {
-    const { data } = await axios.put(
-      `${server}/api/users/updateProfile`,
-      userData,
-      {
-        withCredentials: true,
-      }
-    );
-    return data;
-  } catch (error) {
-    if (error.response && error.response.data.message)
-      throw new Error(error.response.data.message);
-    throw new Error(error.message);
-  }
-};
-
 export const uploadProfilePic = async ({ formData }) => {
   try {
     const config = {
       headers: {
         "Content-Type": "multipart/form-data",
       },
+      withCredentials: true,
     };
 
     const { data } = await axios.post(
@@ -109,7 +97,12 @@ export const uploadProfilePic = async ({ formData }) => {
 
 export const deleteProfilePic = async () => {
   try {
-    const { data } = await axios.delete(`${server}/api/users/deleteProfilePic`);
+    const { data } = await axios.delete(
+      `${server}/api/users/deleteProfilePic`,
+      {
+        withCredentials: true,
+      }
+    );
     return data;
   } catch (error) {
     if (error.response && error.response.data.message)

@@ -28,7 +28,7 @@ const navItemsInfo = [
   },
 ];
 
-const MenuItem = ({ onClick = () => { }, label, link = "/", className = "" }) => (
+const MenuItem = ({ onClick = () => { }, label, link = "", className = "" }) => (
   <>
     {link ? (
       <Link href={link}>
@@ -104,9 +104,17 @@ const NavItem = ({ item, className = "" }) => {
 
 const Header = () => {
   const dispatch = useDispatch();
+  const [user, setUser] = useState({
+    name: "",
+    avatar: "",
+  })
   const [navIsVisible, setNavIsVisible] = useState(false);
 
-  const userState = useSelector((state) => state.user);
+  const { userInfo } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    setUser(userInfo)
+  }, [userInfo])
 
   const navVisibilityHandler = () => {
     setNavIsVisible((curState) => !curState);
@@ -138,6 +146,7 @@ const Header = () => {
   useEffect(() => {
     currentLocation !== "/editor" && dispatch(postActions.resetPostInfo())
   }, [currentLocation, dispatch]);
+
   return (
     <section className="sticky top-0 left-0 right-0 z-50 bg-white">
       <header className="container relative mx-auto px-5 flex justify-between py-4 items-center">
@@ -154,14 +163,14 @@ const Header = () => {
             <AiOutlineMenu className="w-6 h-6" onClick={navVisibilityHandler} />
           )}
         </div>
-        {userState?.userInfo ? (
+        {user ? (
           <div
             className={`lg:hidden transition-opacity overflow-hidden duration-200 ${navIsVisible
               ? "opacity-100 pointer-events-auto"
               : "opacity-0 pointer-events-none"
               } top-16 block bg-white w-full z-50 absolute left-0 right-0 drop-shadow-md`}
           >
-            {/* <div className="flex flex-col items-center cursor-pointer gap-1">
+            <div className="flex flex-col items-center cursor-pointer gap-1">
               <MenuItem
                 onClick={() => setNavIsVisible(false)}
                 label={`${currentLocation === "/profile" ? "Home" : "Profile"}`}
@@ -173,7 +182,7 @@ const Header = () => {
                 link="/articles"
               />
               <MenuItem onClick={logoutHandler} label="Logout" />
-            </div> */}
+            </div>
           </div>
         ) : (
           <div
@@ -182,7 +191,7 @@ const Header = () => {
               : "opacity-0 pointer-events-none"
               } top-16 block bg-white w-full z-50 absolute left-0 right-0 drop-shadow-md`}
           >
-            {/* <div className="flex flex-col items-center cursor-pointer gap-1">
+            <div className="flex flex-col items-center cursor-pointer gap-1">
               <MenuItem
                 onClick={() => setNavIsVisible(false)}
                 label="Articles"
@@ -193,16 +202,16 @@ const Header = () => {
                 label={`${currentLocation === "login" ? "Home" : "login"}`}
                 link={`${currentLocation === "login" ? "/" : "/login"}`}
               />
-            </div> */}
+            </div>
           </div>
         )}
 
-        {/* <div className="lg:flex gap-10 hidden">
+        <div className="lg:flex gap-10 hidden">
           <div className="text-white items-center lg:text-dark-soft flex flex-col lg:flex-row gap-x-2 gap-y-3 font-semibold">
             {navItemsInfo.map((item) => (
               <NavItem key={item.name} item={item} />
             ))}
-            {userState.userInfo && (
+            {user?.admin && (
               <Link href="/editor">
                 <BiAddToQueue
                   size={20}
@@ -211,28 +220,29 @@ const Header = () => {
               </Link>
             )}
           </div>
-          {userState?.userInfo ? (
+          {user ? (
             <Link href="/profile" className={`cursor-pointer lg:block hidden`}>
               <Avatar
                 src={
-                  userState?.userInfo?.avatar
-                    ? userState.userInfo.avatar
+                  user?.avatar
+                    ? user.avatar
                     : "/assets/images/user.png"
                 }
               />
             </Link>
           ) : (
-            <button
-              onClick={() => redirect("/login")}
-              className={`${currentLocation === "login" || currentLocation === "register"
-                ? "hidden"
-                : "block"
-                } mt-5 lg:mt-0 border-2 border-blue-500 px-6 py-2 rounded-full text-blue-500 font-semibold hover:bg-blue-500 hover:text-white transition-all duration-300`}
-            >
-              Sign in
-            </button>
+            <Link href="/login">
+              <button
+                className={`${currentLocation === "/login" || currentLocation === "/register"
+                  ? "hidden"
+                  : "block"
+                  } mt-5 lg:mt-0 border-2 border-blue-500 px-6 py-2 rounded-full text-blue-500 font-semibold hover:bg-blue-500 hover:text-white transition-all duration-300`}
+              >
+                Sign in
+              </button>
+            </Link>
           )}
-        </div> */}
+        </div>
       </header>
     </section>
   );

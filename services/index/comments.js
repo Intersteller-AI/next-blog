@@ -21,20 +21,19 @@ export const createNewComment = async ({ desc, slug, parent, replyOnUser }) => {
   }
 };
 
-export const updateComment = async ({ token, desc, commentId }) => {
+export const updateComment = async ({ desc, commentId }) => {
   try {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
     const { data } = await axios.put(
       `${server}/api/comments/${commentId}`,
       {
         desc,
       },
-      config
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
     return data;
   } catch (error) {
@@ -46,16 +45,12 @@ export const updateComment = async ({ token, desc, commentId }) => {
 
 export const deleteComment = async ({ token, commentId }) => {
   try {
-    const config = {
+    const { data } = await axios.delete(`${server}/api/comments/${commentId}`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
-    };
-
-    const { data } = await axios.delete(
-      `${server}/api/comments/${commentId}`,
-      config
-    );
+      withCredentials: true,
+    });
     return data;
   } catch (error) {
     if (error.response && error.response.data.message)
