@@ -27,13 +27,15 @@ const Creator = ({ modal, setModal, post, setPost }) => {
 	const [isUpadating, setIsUpadating] = useState(false);
 	const dispatch = useDispatch();
 	const [activeButt, setActiveButt] = useState(false)
+	const [htmlBody, setHtmlBody] = useState("")
 
 	const router = useRouter()
 
 	const { userPost } = useSelector((state) => state.post);
 
 	const handleChange = (e) => {
-		setPost({ ...post, [e.target.name]: e.target.value });
+		const { name, value } = e.target
+		setPost({ ...post, [name]: value });
 	};
 
 	const { mutate: submitMutate } = useMutation({
@@ -41,6 +43,7 @@ const Creator = ({ modal, setModal, post, setPost }) => {
 		onSuccess: () => {
 			toast.success("Post created successfully");
 			setActiveButt(true)
+			Cookies.remove("title")
 			router.push("/");
 		},
 		onError: (error) => {
@@ -54,7 +57,7 @@ const Creator = ({ modal, setModal, post, setPost }) => {
 
 		const formData = new FormData();
 
-		formData.append("title", post.title);
+		formData.append("title", Cookies.get("title"));
 		formData.append("body", post.body);
 		formData.append("postPicture", post.postPicture);
 		formData.append("caption", post.caption);
@@ -69,6 +72,7 @@ const Creator = ({ modal, setModal, post, setPost }) => {
 			toast.success("Post updated successfully");
 			dispatch(postActions.resetPostInfo());
 			setActiveButt(true)
+			Cookies.remove("title")
 			router.push("/");
 		},
 		onError: (error) => {
@@ -82,7 +86,8 @@ const Creator = ({ modal, setModal, post, setPost }) => {
 
 		const formData = new FormData();
 
-		formData.append("title", post.title);
+		// formData.append("title", post.title);
+		formData.append("title", Cookies.get("title"));
 		formData.append("body", post.body);
 		formData.append("postPicture", post.postPicture);
 		formData.append("caption", post.caption);
@@ -103,9 +108,14 @@ const Creator = ({ modal, setModal, post, setPost }) => {
 						: userPost.photo,
 				body: userPost.body,
 			});
+			setBody(userPost.body)
 			setPostSlug(userPost.slug);
 		}
 	}, []);
+
+	useEffect(() => {
+		setPost({ ...post, body: htmlBody })
+	}, [htmlBody])
 
 	return (
 		<>
@@ -148,12 +158,11 @@ const Creator = ({ modal, setModal, post, setPost }) => {
 					<div className="slides-inner w-full h-full transition duration-200 flex snap-mandatory snap-x"
 						style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
 						<div className="w-full h-full snap-center flex-shrink-0">
-							<QuillEditor htmlContent={post} setHtmlContent={setPost} />
-							{/* <div className="w-full" ref={quillElement} style={{ height: "40vh" }} /> */}
+							<QuillEditor post={post} setPost={setPost} />
 						</div>
 						<div className="w-full h-full snap-center p-2 border-2 border-slate-300 flex-shrink-0">
 							<div className='w-full h-full' style={{ height: "40vh" }} >
-								{ReactHtmlParser(post.body)}
+								{ReactHtmlParser(String(post.body))}
 							</div>
 						</div>
 					</div>
