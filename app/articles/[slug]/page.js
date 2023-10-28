@@ -14,6 +14,7 @@ import { postActions } from "@/store/reducers/post";
 import Link from "next/link";
 import Image from "next/image";
 import { deletePost, getSinglePost, likePost } from "@/services/index/posts";
+import { redirect, useRouter } from "next/navigation";
 
 const ArticleDetailPage = ({ params }) => {
   const { slug } = params;
@@ -28,7 +29,7 @@ const ArticleDetailPage = ({ params }) => {
   const [user, setUser] = useState({
     name: "",
     avatar: "",
-    _id: ""
+    _id: "",
   });
 
   useEffect(() => {
@@ -39,9 +40,7 @@ const ArticleDetailPage = ({ params }) => {
     queryFn: () => getSinglePost({ slug }),
     queryKey: ["articles", slug],
     onSuccess: (data) => {
-      setLike(
-        data.likes.includes(user?._id) === true ? true : false
-      );
+      setLike(data.likes.includes(user?._id) === true ? true : false);
       setbreadCrumbsData([
         { name: "Home", link: "/" },
 
@@ -90,9 +89,10 @@ const ArticleDetailPage = ({ params }) => {
     likePostMutate(slug);
   };
 
+  const router = useRouter();
   const handleUpdatePost = () => {
     dispatch(postActions.setPostInfo(data));
-    navigate("/editor");
+    router.push("/editor");
   };
 
   return (
@@ -125,7 +125,7 @@ const ArticleDetailPage = ({ params }) => {
               height={100}
               className="rounded-md w-full mt-6"
               src={
-                !isLoading && !isError && data
+                !isLoading && !isError && data.photo
                   ? data.photo
                   : "/assets/sample.jpg"
               }
@@ -150,7 +150,11 @@ const ArticleDetailPage = ({ params }) => {
             <Image
               width={100}
               height={100}
-              src={data?.user?.avatar ? data?.user?.avatar : "/assets/images/user.png"}
+              src={
+                data?.user?.avatar
+                  ? data?.user?.avatar
+                  : "/assets/images/user.png"
+              }
               alt="o"
               className="w-full h-full object-cover"
             />

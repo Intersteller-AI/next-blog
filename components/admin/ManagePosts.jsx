@@ -10,6 +10,7 @@ import Image from "next/image";
 import { deletePost, getSinglePost } from "@/services/index/posts";
 import { postActions } from "@/store/reducers/post";
 import Link from "next/link";
+import { redirect } from "next/dist/server/api-utils";
 
 const ConfModal = ({
   cancelConf,
@@ -70,7 +71,7 @@ const ManagePosts = ({ posts, isLoading }) => {
 
   const handleUpdatePost = () => {
     dispatch(postActions.setPostInfo(data));
-    navigate("/editor");
+    redirect("/editor");
   };
 
   return (

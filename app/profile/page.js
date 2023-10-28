@@ -6,6 +6,7 @@ import { ProfilePicture } from "@/components";
 import { redirect } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { getUserProfile } from "@/services/index/users";
+import { logout } from "@/store/actions/user";
 
 const UserProfile = () => {
   const { userInfo } = useSelector((state) => state.user);

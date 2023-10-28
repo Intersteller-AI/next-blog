@@ -211,7 +211,7 @@ const Header = () => {
             {navItemsInfo.map((item) => (
               <NavItem key={item.name} item={item} />
             ))}
-            {user?.admin && (
+            {user && (
               <Link href="/editor">
                 <BiAddToQueue
                   size={20}
