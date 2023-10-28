@@ -2,15 +2,14 @@
 // import Quill from 'quill';
 // import 'quill/dist/quill.snow.css';
 
-// const QuillEditor = ({ htmlContent, setHtmlContent }) => {
+// const QuillEditor = ({ post, setPost }) => {
 // 	const quillElement = useRef(null);
 // 	const quillInstance = useRef(null);
 
 // 	useEffect(() => {
 // 		if (quillElement.current && !quillInstance.current) {
 // 			quillInstance.current = new Quill(quillElement.current, {
-// 				theme: 'snow',
-// 				modules: {
+// 				theme: 'snow', modules: {
 // 					toolbar: [
 // 						['bold', 'italic', 'underline', 'strike'],        // toggled buttons
 // 						['blockquote', 'code-block'],
@@ -30,13 +29,25 @@
 // 			});
 // 			quillInstance.current.on('text-change', function () {
 // 				const html = quillElement.current.querySelector('.ql-editor').innerHTML;
-// 				setHtmlContent({ ...htmlContent, body: String(html) });
-// 			});
-// 			quillElement.current.querySelector('.ql-editor').innerHTML = htmlContent.body;
-// 		}
-// 	}, [htmlContent, setHtmlContent]);
+// 				setPost(prevPost => ({ ...prevPost, body: String(html) }));
 
-// 	return <div ref={quillElement} style={{ height: "40vh" }} />;
+// 				// Move the cursor to the end of the text
+// 				const length = quillInstance.current.getLength();
+// 				quillInstance.current.setSelection(length, length);
+// 			});
+// 		}
+// 		// Update the editor with the HTML content
+// 		if (quillInstance.current && post.body) {
+// 			const delta = quillInstance.current.clipboard.convert(post.body);
+// 			quillInstance.current.setContents(delta, 'silent');
+
+// 			// Move the cursor to the end of the text
+// 			const length = quillInstance.current.getLength();
+// 			quillInstance.current.setSelection(length, length);
+// 		}
+// 	}, [post, setPost]);
+
+// 	return <div ref={quillElement} style={{ height: "500px" }} />;
 // };
 
 // export default QuillEditor;
@@ -55,16 +66,24 @@ const QuillEditor = ({ post, setPost }) => {
 			quillInstance.current.on('text-change', function () {
 				const html = quillElement.current.querySelector('.ql-editor').innerHTML;
 				setPost(prevPost => ({ ...prevPost, body: String(html) }));
+
+				// Move the cursor to the end of the text
+				const length = quillInstance.current.getLength();
+				quillInstance.current.setSelection(length, length);
 			});
 		}
 		// Update the editor with the HTML content
 		if (quillInstance.current && post.body) {
 			const delta = quillInstance.current.clipboard.convert(post.body);
 			quillInstance.current.setContents(delta, 'silent');
+
+			// Move the cursor to the end of the text
+			const length = quillInstance.current.getLength();
+			quillInstance.current.setSelection(length, length);
 		}
 	}, [post, setPost]);
 
-	return <div ref={quillElement} style={{ height: "500px" }} />;
+	return <div ref={quillElement} style={{ height: "35vh", whiteSpace: "pre-wrap" }} />;
 };
 
 export default QuillEditor;

@@ -75,11 +75,12 @@ const EditorModal = ({ handleChange, post, setPost, modal, isUpadating, setModal
 
   return (
     <div className={`z-[99] flex flex-col absolute md:top-0 md:translate-y-0 left-[50%] translate-x-[-50%] w-10/12 lg:w-1/2 bg-white drop-shadow-lg rounded-sm px-6 py-2 duration-300 transition-all ${modal ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}>
-      <AiOutlineCloseCircle
-        onClick={handleClickClose}
-        className="self-end text-black hover:text-red-400 mb-10"
-        size={20}
-      />
+      <button onClick={handleClickClose} disabled={activeButt} className='self-end mb-10 drop-shadow-md'>
+        <AiOutlineCloseCircle
+          className="text-black hover:text-red-400"
+          size={20}
+        />
+      </button>
       <Input
         label="caption"
         onChange={handleChange}

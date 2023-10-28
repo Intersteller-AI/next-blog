@@ -1,12 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import { QueryClient, useMutation } from "@tanstack/react-query";
-import { deletePostImage, uploadPostImage } from "@/services/index/posts";
-import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
 import Creator from "@/components/editor/Creator";
 import { usePathname } from "next/navigation";
-import Cookies from "js-cookie";
 
 const EditorPage = () => {
   const currentLocation =

@@ -64,7 +64,7 @@ const ArticleDetailPage = ({ params }) => {
     mutationFn: (slug) => deletePost({ slug }),
     onSuccess: (message) => {
       toast.success(message.message);
-      navigate("/");
+      router.push("/");
     },
     onError: (error) => {
       toast.error(error.message);

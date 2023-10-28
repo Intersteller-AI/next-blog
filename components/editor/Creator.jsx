@@ -1,12 +1,7 @@
 "use client"
-import Image from 'next/image'
-import React, { useEffect, useRef, useState } from 'react'
-import { TbPhotoPlus } from 'react-icons/tb'
-import { Input } from '.'
-import { AiOutlineCloseCircle } from 'react-icons/ai'
+import React, { useEffect, useState } from 'react'
 import { createPost, updatePost } from '@/services/index/posts'
 import { useMutation } from '@tanstack/react-query'
-// import Quill from 'quill'
 import "quill/dist/quill.snow.css";
 import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/navigation'
@@ -27,7 +22,6 @@ const Creator = ({ modal, setModal, post, setPost }) => {
 	const [isUpadating, setIsUpadating] = useState(false);
 	const dispatch = useDispatch();
 	const [activeButt, setActiveButt] = useState(false)
-	const [htmlBody, setHtmlBody] = useState("")
 
 	const router = useRouter()
 
@@ -43,7 +37,6 @@ const Creator = ({ modal, setModal, post, setPost }) => {
 		onSuccess: () => {
 			toast.success("Post created successfully");
 			setActiveButt(true)
-			Cookies.remove("title")
 			router.push("/");
 		},
 		onError: (error) => {
@@ -57,13 +50,13 @@ const Creator = ({ modal, setModal, post, setPost }) => {
 
 		const formData = new FormData();
 
-		formData.append("title", Cookies.get("title"));
+		formData.append("title", post.title);
 		formData.append("body", post.body);
 		formData.append("postPicture", post.postPicture);
 		formData.append("caption", post.caption);
 
 		console.log(post);
-		// submitMutate({ formData });
+		submitMutate({ formData });
 	};
 
 	const { mutate: updateMutate } = useMutation({
@@ -72,7 +65,6 @@ const Creator = ({ modal, setModal, post, setPost }) => {
 			toast.success("Post updated successfully");
 			dispatch(postActions.resetPostInfo());
 			setActiveButt(true)
-			Cookies.remove("title")
 			router.push("/");
 		},
 		onError: (error) => {
@@ -86,8 +78,7 @@ const Creator = ({ modal, setModal, post, setPost }) => {
 
 		const formData = new FormData();
 
-		// formData.append("title", post.title);
-		formData.append("title", Cookies.get("title"));
+		formData.append("title", post.title);
 		formData.append("body", post.body);
 		formData.append("postPicture", post.postPicture);
 		formData.append("caption", post.caption);
@@ -111,11 +102,7 @@ const Creator = ({ modal, setModal, post, setPost }) => {
 			setBody(userPost.body)
 			setPostSlug(userPost.slug);
 		}
-	}, []);
-
-	useEffect(() => {
-		setPost({ ...post, body: htmlBody })
-	}, [htmlBody])
+	}, [userPost, setIsUpadating, setPost]);
 
 	return (
 		<>
